@@ -1,7 +1,5 @@
 import {Config, readConfig} from "./config.js";
-import {CommandRegistry, runCommand} from "./commands/commands.js";
-import {commandRegister} from "./commands/command_register.js";
-import {commandLogin} from "./commands/command_login.js";
+import {getCommands, runCommand} from "./commands/commands.js";
 
 async function main() {
     let cfg: Config | undefined = readConfig();
@@ -10,14 +8,11 @@ async function main() {
         process.exit(1);
     }
 
-    let commands: CommandRegistry = {
-        login: commandLogin,
-        register: commandRegister,
-    };
+    let commands = getCommands();
 
     const argv = process.argv;
-    if (argv.length < 4) {
-        console.log("Too few arguments.");
+    if (argv.length < 3) {
+        console.log("No command entered");
         process.exit(1);
     }
 
@@ -26,8 +21,8 @@ async function main() {
     const cmdName = args[0];
     const cmdArgs = args.slice(1);
 
-    if (!cmdName || !cmdArgs) {
-        console.log("Bad Args");
+    if (!cmdName) {
+        console.log("No command entered");
         process.exit(1);
     }
 

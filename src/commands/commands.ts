@@ -1,4 +1,9 @@
-import {CommandHandler} from "./command_handler.js";
+import { CommandHandler } from "./command_handler.js";
+import { commandLogin } from "./command_login.js";
+import { commandRegister } from "./command_register.js";
+import { commandReset } from "./command_reset.js";
+import { commandUsers } from "./command_users.js";
+import { commandAgg } from "./command_agg.js";
 
 export type CommandRegistry = {
     [key: string]: CommandHandler;
@@ -25,4 +30,14 @@ export async function runCommand(
     }
 
     return Promise.resolve();
+}
+
+export function getCommands(): CommandRegistry {
+    return {
+        login: commandLogin,
+        register: commandRegister,
+        reset: commandReset,
+        users: commandUsers,
+        agg: commandAgg,
+    };
 }
