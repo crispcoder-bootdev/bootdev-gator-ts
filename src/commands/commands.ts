@@ -12,14 +12,17 @@ export function registerCommand(
     registry[cmdName] = handler;
 }
 
-export function runCommand(
+export async function runCommand(
     registry: CommandRegistry,
     cmdName: string,
     ...args: string[]
-) {
+): Promise<void> {
+    console.log(`Attempting to run ${cmdName} with args ${args}`);
     if (cmdName in registry) {
-        registry[cmdName](cmdName, ...args);
+        await registry[cmdName](cmdName, ...args);
     } else {
         console.log(`${cmdName} not found`);
     }
+
+    return Promise.resolve();
 }

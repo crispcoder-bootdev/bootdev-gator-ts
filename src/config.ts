@@ -13,27 +13,21 @@ type RawConfig = {
 };
 
 export function setUser(user: string): void {
-    let cfg = readConfig(); // rawConfig
-    if (!cfg) {
-        throw new Error("read config failed");
-    }
-
+    let cfg = readConfig();
     cfg.currentUserName = user;
     writeConfig(cfg);
 }
 
-export function readConfig(): Config | undefined {
+export function readConfig(): Config {
     const data = fs.readFileSync(getConfigFilePath(), {encoding: "utf-8"});
     const rawConfig: RawConfig = JSON.parse(data) as RawConfig;
 
-    if (validateConfig(rawConfig)) {
-        return {
-            dbUrl: rawConfig.db_url,
-            currentUserName: rawConfig.user,
-        };
-    }
-
-    return undefined;
+    // Throws on failure
+    validateConfig(rawConfig);
+    return {
+        dbUrl: rawConfig.db_url,
+        currentUserName: rawConfig.user,
+    };
 }
 
 function getConfigFilePath(): string {
@@ -53,18 +47,16 @@ function writeConfig(cfg: Config): void {
     fs.writeFileSync(getConfigFilePath(), data);
 }
 
-function validateConfig(rawConfig: any): boolean {
+function validateConfig(rawConfig: any): void {
     if (!rawConfig) {
-        return false;
+        throw new Error("Config is null or empty");
     }
 
     if (!rawConfig.db_url || typeof rawConfig.db_url !== "string") {
-        return false;
+        throw new Error("Config db_url is missing");
     }
 
     if (!rawConfig.user || typeof rawConfig.user !== "string") {
-        return false;
+        throw new Error("Config user is missing");
     }
-
-    return true;
 }
