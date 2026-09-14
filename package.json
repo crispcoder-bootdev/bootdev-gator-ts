@@ -14,12 +14,12 @@
     "description": "",
     "devDependencies": {
         "@types/node": "^26.4.1",
+        "drizzle-kit": "^0.31.10",
         "tsx": "^4.23.13",
         "typescript": "^7.0.2"
     },
     "type": "module",
     "dependencies": {
-        "drizzle-kit": "^0.18.1",
         "drizzle-orm": "^0.45.2",
         "fast-xml-parser": "^5.11.1",
         "postgres": "^3.4.9"

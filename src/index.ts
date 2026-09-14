@@ -17,7 +17,7 @@ async function main() {
     }
 
     // Argv has node binary and index.ts as first two arguments.
-    const args = argv.slice(2, 4);
+    const args = argv.slice(2);
     const cmdName = args[0];
     const cmdArgs = args.slice(1);
 
