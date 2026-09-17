@@ -6,6 +6,8 @@ import {commandUsers} from "./command_users.js";
 import {commandAgg} from "./command_agg.js";
 import {commandAddFeed} from "./command_add_feed.js";
 import {commandFeeds} from "./command_feeds.js";
+import {commandFollow} from "./command_follow.js";
+import {commandFollowing} from "./command_following.js";
 
 export type CommandRegistry = {
     [key: string]: CommandHandler;
@@ -43,5 +45,7 @@ export function getCommands(): CommandRegistry {
         agg: commandAgg,
         addfeed: commandAddFeed,
         feeds: commandFeeds,
+        follow: commandFollow,
+        following: commandFollowing,
     };
 }

@@ -1,10 +1,10 @@
 import {createFeedFollow} from "../lib/db/queries/feed_follows.js";
-import {createFeed} from "../lib/db/queries/feeds.js";
+import {getFeedByURL} from "../lib/db/queries/feeds.js";
 import {getUser} from "../lib/db/queries/users.js";
 import {readConfig} from "../config.js";
 import {Feed, User} from "../lib/db/schema.js";
 
-export async function commandAddFeed(
+export async function commandFollow(
     cmdName: string,
     ...args: string[]
 ): Promise<void> {
@@ -18,29 +18,24 @@ export async function commandAddFeed(
         throw new Error(`User: ${user} is empty or missing.`);
     }
 
-    let name = args[0];
-    if (!name) {
-        throw new Error("Name argument not provided.");
-    }
-
-    let url = args[1];
+    let url = args[0];
     if (!url) {
         throw new Error("Url argument not provided.");
     }
 
-    let dbUser = await getUser(user);
+    let dbUser = (await getUser(user)) as User;
     if (!dbUser) {
         throw new Error(`User ${user} doesn't exist.`);
     }
 
-    let dbFeed = await createFeed(name, url, dbUser.id);
+    let dbFeed = (await getFeedByURL(url)) as Feed;
     if (!dbFeed) {
-        throw new Error("Feed creation failed.");
+        throw new Error(`Feed for ${url} doesn't exist.`);
     }
 
-    let dbFeedFollow = await createFeedFollow(dbUser.id, dbFeed.id);
-    if (!dbFeedFollow) {
-        throw new Error("Feed follow creation failed.");
+    let feedFollow = await createFeedFollow(dbUser.id, dbFeed.id);
+    if (!feedFollow) {
+        throw new Error("Follow failed");
     }
 
     printFeed(dbFeed, dbUser);
